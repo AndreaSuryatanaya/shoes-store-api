@@ -9,6 +9,7 @@ FROM alpine:3.20
 WORKDIR /app
 RUN apk add --no-cache ca-certificates tzdata
 COPY --from=builder /server /app/server
+COPY --from=builder /app/shoe_images /app/shoe_images
 ENV GIN_MODE=release
 EXPOSE 8000
 CMD ["/app/server"]

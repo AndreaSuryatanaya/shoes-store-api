@@ -297,6 +297,7 @@ func main() {
 			"docs":    "/swagger/index.html",
 		})
 	})
+	router.Static("/images", "./shoe_images")
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})

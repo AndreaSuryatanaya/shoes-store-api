@@ -90,7 +90,61 @@ JOIN categories c ON c.name = v.category
 WHERE NOT EXISTS (SELECT 1 FROM products)
 ORDER BY v.ord;
 
--- Placeholder gambar untuk produk yang belum punya image_url. Ganti dengan URL gambar asli kapan saja.
-UPDATE products
-SET image_url = 'https://placehold.co/600x600?text=' || replace(name, ' ', '+')
-WHERE image_url = '';
+-- Gambar dilayani API di /images (folder shoe_images). Hanya mengisi image_url yang masih kosong
+-- atau masih placeholder, jadi URL yang sudah diubah manual tidak tertimpa.
+UPDATE products p
+SET image_url = 'https://shoes-api.andrea.web.id/images/' || v.file
+FROM (VALUES
+    (1, '1_nike_pegasus_41.jpg'),
+    (2, '2_adidas_ultraboost_light.jpg'),
+    (3, '3_asics_gel_kayano_30.jpg'),
+    (4, '4_hoka_clifton_9.jpg'),
+    (5, '5_brooks_ghost_15.jpg'),
+    (6, '6_new_balance_fresh_foam_880.jpg'),
+    (7, '7_saucony_ride_17.jpg'),
+    (8, '8_puma_velocity_nitro_3.jpg'),
+    (9, '9_nike_air_force_1_07.jpg'),
+    (10, '10_adidas_samba_og.jpg'),
+    (11, '11_adidas_superstar.jpg'),
+    (12, '12_puma_suede_classic.jpg'),
+    (13, '13_new_balance_550.jpg'),
+    (14, '14_reebok_club_c_85.jpg'),
+    (15, '15_converse_chuck_70_high.jpg'),
+    (16, '16_nike_dunk_low.jpg'),
+    (17, '17_nike_lebron_21.jpg'),
+    (18, '18_jordan_air_jordan_1_mid.jpg'),
+    (19, '19_adidas_dame_8.jpg'),
+    (20, '20_under_armour_curry_11.webp'),
+    (21, '21_puma_mb_03.jpg'),
+    (22, '22_li_ning_way_of_wade_10.png'),
+    (23, '23_nike_kobe_6_protro.png'),
+    (24, '24_nike_mercurial_vapor_15.jpg'),
+    (25, '25_adidas_predator_accuracy.jpg'),
+    (26, '26_puma_future_7_ultimate.jpg'),
+    (27, '27_adidas_copa_pure_ii.jpg'),
+    (28, '28_mizuno_morelia_neo_iv.jpg'),
+    (29, '29_specs_accelerator_lightspeed.jpg'),
+    (30, '30_ortuseight_forte_pro.jpg'),
+    (31, '31_vans_old_skool.jpg'),
+    (32, '32_vans_sk8_hi.jpg'),
+    (33, '33_converse_chuck_taylor_all_star.jpg'),
+    (34, '34_skechers_go_walk_6.jpg'),
+    (35, '35_compass_gazelle_low.jpg'),
+    (36, '36_ventela_public_low.jpg'),
+    (37, '37_aerostreet_daily_slip_on.jpg'),
+    (38, '38_crocs_classic_clog.png'),
+    (39, '39_timberland_6_inch_premium.jpg'),
+    (40, '40_dr_martens_1460.jpg'),
+    (41, '41_caterpillar_colorado.jpg'),
+    (42, '42_red_wing_iron_ranger.jpg'),
+    (43, '43_wolverine_1000_mile.webp'),
+    (44, '44_brodo_signore_chelsea.jpg'),
+    (45, '45_pedro_chukka_boots.jpg'),
+    (46, '46_birkenstock_arizona.jpg'),
+    (47, '47_teva_hurricane_xlt2.jpg'),
+    (48, '48_havaianas_top.png'),
+    (49, '49_nike_victori_one_slide.jpg'),
+    (50, '50_adidas_adilette_shower.jpg')
+) AS v(id, file)
+WHERE p.id = v.id
+  AND (p.image_url = '' OR p.image_url LIKE 'https://placehold.co/%');
