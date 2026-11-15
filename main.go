@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	_ "embed"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,6 +20,9 @@ import (
 
 	_ "backend-shoes-store/docs"
 )
+
+//go:embed db/products.sql
+var productsSQL string
 
 type RegisterRequest struct {
 	Name     string `json:"name" binding:"required"`
@@ -279,6 +283,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if _, err := db.Exec(productsSQL); err != nil {
+		log.Fatalf("failed to migrate products schema: %v", err)
+	}
+
 	h := &Handler{DB: db}
 
 	router := gin.Default()
@@ -294,6 +302,7 @@ func main() {
 
 	router.POST("/register", h.Register)
 	router.POST("/login", h.Login)
+	router.GET("/products", h.GetAllProducts)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

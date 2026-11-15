@@ -10,6 +10,49 @@ definitions:
     - email
     - password
     type: object
+  main.Pagination:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total_items:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  main.Product:
+    properties:
+      brand:
+        type: string
+      category:
+        type: string
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+    type: object
+  main.ProductListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/main.Product'
+        type: array
+      message:
+        type: string
+      pagination:
+        $ref: '#/definitions/main.Pagination'
+    type: object
   main.RegisterRequest:
     properties:
       email:
@@ -69,6 +112,51 @@ paths:
       summary: Login user
       tags:
       - Authentication
+  /products:
+    get:
+      description: Get all products with search, filter by category, and pagination
+      parameters:
+      - description: Search by product name or brand (case-insensitive)
+        in: query
+        name: search
+        type: string
+      - description: Filter by category name (e.g. Running) or category id
+        in: query
+        name: category
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ProductListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List products
+      tags:
+      - products
   /register:
     post:
       consumes:
