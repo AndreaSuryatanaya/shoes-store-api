@@ -67,7 +67,7 @@ definitions:
     - name
     - password
     type: object
-host: localhost:8080
+host: shoes-api.andrea.web.id
 info:
   contact: {}
   description: Backend API for Shoes Store
@@ -195,4 +195,6 @@ paths:
       summary: Register new user
       tags:
       - Authentication
+schemes:
+- https
 swagger: "2.0"

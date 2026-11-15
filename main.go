@@ -255,7 +255,8 @@ func (h *Handler) Login(ctx *gin.Context) {
 // @title Shoes Store API
 // @version 1.0
 // @description Backend API for Shoes Store
-// @host localhost:8080
+// @host shoes-api.andrea.web.id
+// @schemes https
 // @BasePath /
 func main() {
 	if err := godotenv.Load(); err != nil {
