@@ -282,6 +282,12 @@ func main() {
 	h := &Handler{DB: db}
 
 	router := gin.Default()
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Welcome to Shoes Store API. Open /swagger/index.html for the API documentation.",
+			"docs":    "/swagger/index.html",
+		})
+	})
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})
