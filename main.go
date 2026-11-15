@@ -24,6 +24,22 @@ import (
 //go:embed db/products.sql
 var productsSQL string
 
+// corsMiddleware mengizinkan request dari origin mana pun.
+// Autentikasi memakai header Authorization (bukan cookie), jadi "*" aman dipakai.
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+		c.Header("Access-Control-Max-Age", "86400")
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+		c.Next()
+	}
+}
+
 type RegisterRequest struct {
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
@@ -291,6 +307,7 @@ func main() {
 	h := &Handler{DB: db}
 
 	router := gin.Default()
+	router.Use(corsMiddleware())
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Welcome to Shoes Store API. Open /swagger/index.html for the API documentation.",
