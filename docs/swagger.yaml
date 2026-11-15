@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  main.Category:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   main.LoginRequest:
     properties:
       email:
@@ -26,9 +33,7 @@ definitions:
       brand:
         type: string
       category:
-        type: string
-      category_id:
-        type: integer
+        $ref: '#/definitions/main.Category'
       created_at:
         type: string
       description:

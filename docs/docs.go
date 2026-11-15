@@ -194,6 +194,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "main.Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "main.LoginRequest": {
             "type": "object",
             "required": [
@@ -233,10 +244,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "category": {
-                    "type": "string"
-                },
-                "category_id": {
-                    "type": "integer"
+                    "$ref": "#/definitions/main.Category"
                 },
                 "created_at": {
                     "type": "string"

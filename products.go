@@ -11,6 +11,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Category struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type Product struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
@@ -19,8 +24,7 @@ type Product struct {
 	Price       int       `json:"price"`
 	Stock       int       `json:"stock"`
 	ImageURL    string    `json:"image_url"`
-	CategoryID  int       `json:"category_id"`
-	Category    string    `json:"category"`
+	Category    Category  `json:"category"`
 	CreatedAt   time.Time `json:"created_at"`
 }
 
@@ -119,7 +123,7 @@ func (h *Handler) GetAllProducts(ctx *gin.Context) {
 	products := []Product{}
 	for rows.Next() {
 		var p Product
-		if err := rows.Scan(&p.ID, &p.Name, &p.Brand, &p.Description, &p.Price, &p.Stock, &p.ImageURL, &p.CategoryID, &p.Category, &p.CreatedAt); err != nil {
+		if err := rows.Scan(&p.ID, &p.Name, &p.Brand, &p.Description, &p.Price, &p.Stock, &p.ImageURL, &p.Category.ID, &p.Category.Name, &p.CreatedAt); err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed to read products"})
 			return
 		}
