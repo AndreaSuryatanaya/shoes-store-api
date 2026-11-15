@@ -12,9 +12,13 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT          NOT NULL DEFAULT '',
     price       INTEGER       NOT NULL CHECK (price >= 0),
     stock       INTEGER       NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    image_url   TEXT          NOT NULL DEFAULT '',
     category_id INTEGER       NOT NULL REFERENCES categories(id),
     created_at  TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
+
+-- Untuk database lama yang tabel products-nya dibuat sebelum kolom image_url ada.
+ALTER TABLE products ADD COLUMN IF NOT EXISTS image_url TEXT NOT NULL DEFAULT '';
 
 CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
 
@@ -85,3 +89,8 @@ FROM (VALUES
 JOIN categories c ON c.name = v.category
 WHERE NOT EXISTS (SELECT 1 FROM products)
 ORDER BY v.ord;
+
+-- Placeholder gambar untuk produk yang belum punya image_url. Ganti dengan URL gambar asli kapan saja.
+UPDATE products
+SET image_url = 'https://placehold.co/600x600?text=' || replace(name, ' ', '+')
+WHERE image_url = '';

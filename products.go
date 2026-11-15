@@ -18,6 +18,7 @@ type Product struct {
 	Description string    `json:"description"`
 	Price       int       `json:"price"`
 	Stock       int       `json:"stock"`
+	ImageURL    string    `json:"image_url"`
 	CategoryID  int       `json:"category_id"`
 	Category    string    `json:"category"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -104,7 +105,7 @@ func (h *Handler) GetAllProducts(ctx *gin.Context) {
 
 	listArgs := append(append([]any{}, args...), limit, (page-1)*limit)
 	rows, err := h.DB.Query(
-		"SELECT p.id, p.name, p.brand, p.description, p.price, p.stock, p.category_id, c.name, p.created_at"+
+		"SELECT p.id, p.name, p.brand, p.description, p.price, p.stock, p.image_url, p.category_id, c.name, p.created_at"+
 			from+where+
 			fmt.Sprintf(" ORDER BY p.id LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2),
 		listArgs...,
@@ -118,7 +119,7 @@ func (h *Handler) GetAllProducts(ctx *gin.Context) {
 	products := []Product{}
 	for rows.Next() {
 		var p Product
-		if err := rows.Scan(&p.ID, &p.Name, &p.Brand, &p.Description, &p.Price, &p.Stock, &p.CategoryID, &p.Category, &p.CreatedAt); err != nil {
+		if err := rows.Scan(&p.ID, &p.Name, &p.Brand, &p.Description, &p.Price, &p.Stock, &p.ImageURL, &p.CategoryID, &p.Category, &p.CreatedAt); err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed to read products"})
 			return
 		}
